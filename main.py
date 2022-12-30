@@ -14,6 +14,7 @@ intents.message_content = True
 # Defining a Discord Client with intents and the "!" command prefix
 bot = commands.Bot(command_prefix = "!", intents = intents)
 
+
 # The @bot.event() decorator is used to register an event
 @bot.event
 async def on_ready():
@@ -75,10 +76,10 @@ async def load_extensions():
 
     :return: None
     """
-    await bot.load_extension("cogs.pinging")
-    await bot.load_extension("cogs.inspiring")
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py'):
+            await bot.load_extension(f'cogs.{filename[:-3]}')
   
-
 # Token key for CrimBot so that the client knows which bot to run it on
 my_secret = os.environ['secret_key']
 
