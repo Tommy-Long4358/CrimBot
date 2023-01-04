@@ -1,10 +1,8 @@
 import requests
 import json
-import youtube_dl
 import discord
 import asyncio
 from discord.ext import commands
-from replit import db
 
 '''
 THOUGHT PROCESS:
