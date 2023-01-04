@@ -5,15 +5,6 @@ import asyncio
 from keep_alive import keep_alive
 from token_key import token
 from discord.ext import commands
-
-'''
-THINGS TO DO:
-    1. Transport bot from replit to VSC and figure out how to keep it live 24/7
-    2. Music playing command
-    3. Copypasta creation command
-    4. Make a website for the bot
-    5. Add any other commands needed
-'''
   
 # Intents is for permissions that the bot has access to
 intents = discord.Intents.default()
