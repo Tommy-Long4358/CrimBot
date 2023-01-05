@@ -71,42 +71,64 @@ class Music(commands.Cog):
 
         return len(self.generateList(sql)) + 1
 
-    def endSong(self, guild, path):
-        os.remove(path)
-
     @commands.command()
     async def join(self, ctx):
         '''
-        Bot joins a voice channel the user is currently in
+        Bot joins a voice channel the user is currently in and can migrate to other channels if called upon to
+
+        :param ctx: Context object that represents everything in the server
+        :return: None
         '''
-        try:
-            # Get channel that user is currently in
-            channel = ctx.author.voice.channel
+        user_vc = ctx.author.voice
+        bot_vc = ctx.voice_client
+
+        # Checks if user is in a VC currently or not
+        if user_vc:
+
+            # Checks if the bot is in a VC currently or not
+            if bot_vc:
+
+                # Checks if the bot is in the same VC as the user
+                if bot_vc.channel != user_vc.channel:
+                    # Migrate VC to user's VC
+                    await ctx.channel.send(f'```Now leaving: {bot_vc.channel}```')
+
+                    # Bot disconnects from the VC it is in currently
+                    await bot_vc.disconnect()
+
+                else:
+                    # bot is in the same VC as the user
+                    await ctx.channel.send(f'```CrimBot is already in the same voice channel as you!```')
+                    return
             
-            # Connect bot to VC user is in
-            await channel.connect()
+            # Bot is not in a VC currently
+            await ctx.channel.send(f'```Now joining: {user_vc.channel}```')
+            await user_vc.channel.connect()
 
-            await ctx.channel.send(f"```Now joining: {channel}!```")
-
-        except:
-            await ctx.channel.send(f"```CrimBot is already in: {ctx.author.voice.channel}!```")
-    
+        else:
+            await ctx.channel.send(f'```You are not in a voice channel currently! Please join one.```')
+        
     @commands.command()
     async def disconnect(self, ctx):
         '''
         Bot disconnects from a voice channel it was in
+
+        TODO: Needs a feature where the bot leaves after a certain amount of time has passed if the command isn't done
         '''
-        try:
-            await ctx.voice_client.disconnect()
-            await ctx.channel.send(f"```Now leaving: {ctx.author.voice.channel}!```")
+        bot_vc = ctx.voice_client
 
-        except:
-            await ctx.channel.send(f"```CrimBot is not in a voice channel currently!```")                                   
-
+        # If the bot is in a voice channel
+        if bot_vc:
+            await ctx.channel.send(f'```Now leaving: {bot_vc.channel}```')
+            await bot_vc.disconnect()
+        
+        else:
+            await ctx.channel.send(f'```CrimBot is not in a voice channel currently!```')
+                                      
     @commands.command()
     async def play(self, ctx, url):
         await ctx.channel.send("```Coming Soon!```")
-        
+
     @commands.command()
     async def pause(self, ctx):
         '''
